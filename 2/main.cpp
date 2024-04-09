@@ -54,5 +54,8 @@ int main()
     bitvec::BitVec B4 = B.get_bit_field(0, 15);
     B4.show();
 
+    std::cout << "__________________________" << std::endl;
+    B.show_bit_field(24, 24);
+
     return 0;
 }

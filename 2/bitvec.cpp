@@ -85,5 +85,10 @@ namespace bitvec {
 
         return BitVec{size_new_bitvec, new_bitvec_data};
     }
+
+    void  BitVec::show_bit_field(int position, int deep_bit) const {
+        get_bit_field(position, deep_bit).show();
+        
+    }
     
 } // namespace bitvec

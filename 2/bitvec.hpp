@@ -39,6 +39,7 @@ class BitVec final {
         }
 
         BitVec get_bit_field(int position, int deep_bit) const;
+        void  show_bit_field(int position, int deep_bit) const;
 
         std::size_t bit_depth() const;
 };
