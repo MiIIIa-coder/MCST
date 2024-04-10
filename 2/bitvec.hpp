@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <bitset>
+#include <sstream>
 
 #define BYTE_SIZE 8
 
@@ -22,6 +23,8 @@ class BitVec final {
 
     public:
         void show() const;
+        std::string get_hex_str() const;
+
         void inverse_bit(const int position);
         bool get_bit(const int position) const;
         void set_bit(const int position, const bool bit);
@@ -51,10 +54,9 @@ class BitVec final {
                 Type power_2 = 1;
                 std::size_t size_data = sizeof(target_data)*BYTE_SIZE;
 
-                for (int index = position, index_2 = 0; index_2 < deep_bit && index < size_ && index_2 < size_data; ++index, power_2 *= 2) {
+                for (int index = position, index_2 = 0; index_2 < deep_bit && index < size_ && index_2 < size_data; ++index, ++index_2, power_2 *= 2) {
                     if (get_bit(index)) {
                         target_data += power_2;
-                        //std::cout << target_data << " " << index << "    ";
                     }
                 }
 

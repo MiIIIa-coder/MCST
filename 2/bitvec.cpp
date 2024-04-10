@@ -29,6 +29,20 @@ namespace bitvec {
         std::cout << std::endl;
     }
 
+    std::string BitVec::get_hex_str() const {
+        std::stringstream ss;
+        byte_t mask = 0b11110000;
+
+        for (std::vector<unsigned char>::const_iterator it = (bitvec_.end()-1); it >= bitvec_.begin(); --it) {
+            byte_t byte = static_cast<byte_t>(*it);
+            int left_part  = ((byte &  mask) >> (BYTE_SIZE / 2)).to_ulong();
+            int right_part =  (byte & (mask  >>  BYTE_SIZE / 2)).to_ulong();
+            ss << std::hex << std::uppercase << left_part << right_part << " ";
+        }
+
+        return ss.str();
+    }
+
     std::size_t BitVec::bit_depth() const {
         return size_;
     }
@@ -76,6 +90,7 @@ namespace bitvec {
     }
 
     BitVec BitVec::get_bit_field(const int position, const int deep_bit) const {
+
         std::size_t size_new_bitvec = deep_bit >= size_ - position ? size_ - position : deep_bit;
         std::vector<int> new_bitvec_data;
         for (int index = position, index_2 = 0; index_2 < deep_bit && index < size_; ++index, ++index_2) {
