@@ -22,14 +22,14 @@ class BitVec final {
 
     public:
         void show() const;
-        void inverse_bit(int position);
-        bool get_bit(int position) const;
-        void set_bit(int position, bool bit);
+        void inverse_bit(const int position);
+        bool get_bit(const int position) const;
+        void set_bit(const int position, const bool bit);
 
         void set_bit_field(int position, const BitVec &bitvector);
 
         template<typename Type>
-        void set_bit_field(int position, Type data) {
+        void set_bit_field(const int position, Type data) {
             static_assert(std::is_integral<Type>::value);
 
             std::size_t size_data = sizeof(data) * BYTE_SIZE;
@@ -38,10 +38,42 @@ class BitVec final {
             }
         }
 
-        BitVec get_bit_field(int position, int deep_bit) const;
-        void  show_bit_field(int position, int deep_bit) const;
+        BitVec get_bit_field(const int position, const int deep_bit) const;
+        void  show_bit_field(const int position, const int deep_bit) const;
 
         std::size_t bit_depth() const;
+
+        public:
+            template<typename Type>
+            Type get_bit_field_func(int position, int deep_bit) const {
+                static_assert(std::is_integral<Type>::value);
+                Type target_data = 0;
+                Type power_2 = 1;
+                std::size_t size_data = sizeof(target_data)*BYTE_SIZE;
+
+                for (int index = position, index_2 = 0; index_2 < deep_bit && index < size_ && index_2 < size_data; ++index, power_2 *= 2) {
+                    if (get_bit(index)) {
+                        target_data += power_2;
+                        //std::cout << target_data << " " << index << "    ";
+                    }
+                }
+
+                return target_data;
+
+            }
+};
+
+struct get_bit_field_in_var {
+    get_bit_field_in_var(int position, int deep_bit, const BitVec &bitvector) : position_(position), deep_bit_(deep_bit),  bitvector_(bitvector) {}
+
+    template<typename Type> operator Type() {
+        return bitvector_.get_bit_field_func<Type>(position_, deep_bit_);
+    }
+
+    private:
+        int position_;
+        int deep_bit_;
+        BitVec bitvector_;
 };
 
 };

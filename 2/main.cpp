@@ -46,6 +46,11 @@ int main()
     B.set_bit_field(120, ull);
     B.show();
 
+    // std::cout << "__________________________" << std::endl;
+    // bool bl = true;
+    // B.set_bit_field(8, bl);
+    // B.show();
+
     std::cout << "__________________________" << std::endl;
     bitvec::BitVec B3 = B.get_bit_field(8, 31);
     B3.show();
@@ -56,6 +61,12 @@ int main()
 
     std::cout << "__________________________" << std::endl;
     B.show_bit_field(24, 24);
+
+    std::cout << "__________________________" << std::endl;
+    int data ;
+    bitvec::get_bit_field_in_var bit_field{0, 32, B};
+    data = bit_field;
+    std::cout << data << std::endl;
 
     return 0;
 }

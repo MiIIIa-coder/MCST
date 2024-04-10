@@ -33,7 +33,7 @@ namespace bitvec {
         return size_;
     }
 
-    void BitVec::inverse_bit(int position) {
+    void BitVec::inverse_bit(const int position) {
         int byte_idx = position / BYTE_SIZE;
         int bit_idx  = position % BYTE_SIZE;
 
@@ -45,7 +45,7 @@ namespace bitvec {
 
     }
 
-    bool BitVec::get_bit(int position) const {
+    bool BitVec::get_bit(const int position) const {
         int byte_idx = position / BYTE_SIZE;
         int  bit_idx = position % BYTE_SIZE;
 
@@ -58,7 +58,7 @@ namespace bitvec {
         return false;
     }
 
-    void BitVec::set_bit(int position, bool bit) {
+    void BitVec::set_bit(const int position, const bool bit) {
         int byte_idx = position / BYTE_SIZE;
         int  bit_idx = position % BYTE_SIZE;
 
@@ -69,13 +69,13 @@ namespace bitvec {
         bitvec_[byte_idx] = static_cast<unsigned char>(byte.to_ulong());
     }
 
-    void BitVec::set_bit_field(int position, const BitVec &bitvector) {
+    void BitVec::set_bit_field(const int position, const BitVec &bitvector) {
         for (int index = position, index_2 = 0; index_2 < bitvector.bit_depth() && index < size_; ++index, ++index_2) {
             set_bit(index, bitvector.get_bit(index_2));
         }
     }
 
-    BitVec BitVec::get_bit_field(int position, int deep_bit) const {
+    BitVec BitVec::get_bit_field(const int position, const int deep_bit) const {
         std::size_t size_new_bitvec = deep_bit >= size_ - position ? size_ - position : deep_bit;
         std::vector<int> new_bitvec_data;
         for (int index = position, index_2 = 0; index_2 < deep_bit && index < size_; ++index, ++index_2) {
@@ -86,7 +86,7 @@ namespace bitvec {
         return BitVec{size_new_bitvec, new_bitvec_data};
     }
 
-    void  BitVec::show_bit_field(int position, int deep_bit) const {
+    void  BitVec::show_bit_field(const int position, const int deep_bit) const {
         get_bit_field(position, deep_bit).show();
         
     }
