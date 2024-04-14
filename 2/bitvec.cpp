@@ -14,13 +14,13 @@ namespace bitvec {
         size_ = size;
         bitvec_.resize(size/BYTE_SIZE + (size % BYTE_SIZE ? 1 : 0), 0);
         for (auto & bit_pos : bitvec) {
-            if (bit_pos < size && bit_pos >= 0) {  //correct number bit
+            if (static_cast<std::size_t>(bit_pos) < size && bit_pos >= 0) {  //correct number bit
                 this->set_bit(bit_pos, 1);
             }
         }
     }
 
-    void BitVec::show() const {
+    void BitVec::show() const noexcept {
         std::cout << "size = " << size_ << std::endl;
 
         for (std::vector<unsigned char>::const_iterator it = (bitvec_.end()-1); it >= bitvec_.begin(); --it) {
@@ -43,11 +43,14 @@ namespace bitvec {
         return ss.str();
     }
 
-    std::size_t BitVec::bit_depth() const {
+    std::size_t BitVec::bit_depth() const noexcept {
         return size_;
     }
 
     void BitVec::inverse_bit(const int position) {
+        if (position < 0 || position > static_cast<int>(size_))
+            throw std::out_of_range("incorrect bit position");
+
         int byte_idx = position / BYTE_SIZE;
         int bit_idx  = position % BYTE_SIZE;
 
@@ -60,6 +63,9 @@ namespace bitvec {
     }
 
     bool BitVec::get_bit(const int position) const {
+        if (position < 0 || position > static_cast<int>(size_))
+            throw std::out_of_range("incorrect bit position");
+
         int byte_idx = position / BYTE_SIZE;
         int  bit_idx = position % BYTE_SIZE;
 
@@ -73,6 +79,9 @@ namespace bitvec {
     }
 
     void BitVec::set_bit(const int position, const bool bit) {
+        if (position < 0 || position > static_cast<int>(size_))
+            throw std::out_of_range("incorrect bit position");
+
         int byte_idx = position / BYTE_SIZE;
         int  bit_idx = position % BYTE_SIZE;
 
@@ -84,16 +93,21 @@ namespace bitvec {
     }
 
     void BitVec::set_bit_field(const int position, const BitVec &bitvector) {
-        for (int index = position, index_2 = 0; index_2 < bitvector.bit_depth() && index < size_; ++index, ++index_2) {
+        if (position < 0 || position > static_cast<int>(size_))
+            throw std::out_of_range("incorrect bit position");
+
+        for (int index = position, index_2 = 0; index_2 < static_cast<int>(bitvector.bit_depth()) && index < static_cast<int>(size_); ++index, ++index_2) {
             set_bit(index, bitvector.get_bit(index_2));
         }
     }
 
     BitVec BitVec::get_bit_field(const int position, const int deep_bit) const {
+        if (position < 0 || position > static_cast<int>(size_))
+            throw std::out_of_range("incorrect bit position");
 
-        std::size_t size_new_bitvec = deep_bit >= size_ - position ? size_ - position : deep_bit;
+        std::size_t size_new_bitvec = (deep_bit >= static_cast<int>(size_) - position) ? size_ - position : deep_bit;
         std::vector<int> new_bitvec_data;
-        for (int index = position, index_2 = 0; index_2 < deep_bit && index < size_; ++index, ++index_2) {
+        for (int index = position, index_2 = 0; index_2 < deep_bit && index < static_cast<int>(size_); ++index, ++index_2) {
             if (get_bit(index))
                 new_bitvec_data.push_back(index_2);
         }

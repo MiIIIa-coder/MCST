@@ -13,6 +13,13 @@ int main()
     B1.set_bit(11, 1);
     B1.show();
 
+    try {
+        bool bo;
+        bo = B.get_bit(-1);
+    } catch (std::out_of_range& ex) {
+        std::cerr << ex.what() << std::endl;
+    }
+
     std::vector<unsigned char> vec_data{1, 4, 3, 55};
     bitvec::BitVec B2{vec_data};
     B2.show();

@@ -22,7 +22,7 @@ class BitVec final {
         BitVec(std::size_t size, std::vector<int> bitvec);  //incorrect bits will ignored
 
     public:
-        void show() const;
+        void show() const noexcept;
         std::string get_hex_str() const;
 
         void inverse_bit(const int position);
@@ -36,8 +36,8 @@ class BitVec final {
             static_assert(std::is_integral<Type>::value);
 
             std::size_t size_data = sizeof(data) * BYTE_SIZE;
-            for (int index = position, index_2 = 0; index_2 < size_data && index < size_; ++index, ++index_2) {
-                set_bit(index, static_cast<bool>((data << (size_data - 1 - index_2)) >> (size_data - 1) & 0b1));
+            for (std::size_t index = position, index_2 = 0; index_2 < size_data && index < size_; ++index, ++index_2) {
+                set_bit(static_cast<int>(index), static_cast<bool>((data << (size_data - 1 - index_2)) >> (size_data - 1) & 0b1));
             }
         }
 
@@ -49,18 +49,21 @@ class BitVec final {
         BitVec get_bit_field(const int position, const int deep_bit) const;
         void  show_bit_field(const int position, const int deep_bit) const;
 
-        std::size_t bit_depth() const;
+        std::size_t bit_depth() const noexcept;
 
         public:
             template<typename Type>
             Type get_bit_field_func(int position, int deep_bit) const {
+                if (position < 0 || position > static_cast<int>(size_))
+                    throw std::out_of_range("incorrect bit position");
+
                 static_assert(std::is_integral<Type>::value);
                 Type target_data = 0;
                 Type power_2 = 1;
                 std::size_t size_data = sizeof(target_data)*BYTE_SIZE;
 
-                for (int index = position, index_2 = 0; index_2 < deep_bit && index < size_ && index_2 < size_data; ++index, ++index_2, power_2 *= 2) {
-                    if (get_bit(index)) {
+                for (std::size_t index = position, index_2 = 0; index_2 < static_cast<std::size_t>(deep_bit) && index < size_ && index_2 < size_data; ++index, ++index_2, power_2 *= 2) {
+                    if (get_bit(static_cast<int>(index))) {
                         target_data += power_2;
                     }
                 }
