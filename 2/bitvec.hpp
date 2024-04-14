@@ -41,6 +41,11 @@ class BitVec final {
             }
         }
 
+        template<bool>
+        void set_bit_field(const int position, bool data) {
+            set_bit(position, data);
+        }
+
         BitVec get_bit_field(const int position, const int deep_bit) const;
         void  show_bit_field(const int position, const int deep_bit) const;
 
@@ -61,6 +66,12 @@ class BitVec final {
                 }
 
                 return target_data;
+
+            }
+
+            template<bool>
+            bool get_bit_field_func(int position, int deep_bit) const {
+                return get_bit(position);
 
             }
 };

@@ -46,10 +46,12 @@ int main()
     B.set_bit_field(120, ull);
     B.show();
 
-    // std::cout << "__________________________" << std::endl;
-    // bool bl = true;
-    // B.set_bit_field(8, bl);
-    // B.show();
+    std::cout << "__________________________" << std::endl;
+    bool bl = true;
+    B.set_bit_field(8, bl);
+    B.show();
+
+    //--------------------------------------
 
     std::cout << "__________________________" << std::endl;
     bitvec::BitVec B3 = B.get_bit_field(8, 31);
@@ -64,12 +66,15 @@ int main()
 
     std::cout << "__________________________" << std::endl;
     int data;
-    bitvec::get_bit_field_in_var bit_field{8, 6, B};
+    bitvec::get_bit_field_in_var bit_field{0, 6, B};
     data = bit_field;
-    std::cout << data << std::endl;
+    std::cout << "int: " << data << std::endl;
     unsigned char ch_data;
     ch_data = bit_field;
-    std::cout << ch_data << std::endl;
+    std::cout << "char: " << ch_data << std::endl;
+    bool bool_data;
+    bool_data = bit_field;
+    std::cout << "bool: " << bool_data << std::endl;
 
     std::cout << "__________________________" << std::endl;
     std::cout << B.get_hex_str() << std::endl;
